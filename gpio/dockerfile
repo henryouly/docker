@@ -1,0 +1,15 @@
+FROM hass:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    git \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN mkdir -p /build
+WORKDIR /build
+RUN git clone https://github.com/LeMaker/RPi.GPIO_BP -b bananapro
+WORKDIR /build/RPi.GPIO_BP
+RUN python3 setup.py install
+RUN rm -rf /build
