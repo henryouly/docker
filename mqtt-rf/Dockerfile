@@ -1,7 +1,5 @@
 FROM henryouly/rpi-python-base
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 RUN apt-get update \
  && apt-get install -y --no-install-recommends git \
  && apt-get clean \
