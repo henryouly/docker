@@ -8,6 +8,8 @@
 #    https://localhost:443
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from threading import Thread
+from socketserver import ThreadingMixIn
 import struct
 import ssl
 import argparse
@@ -27,11 +29,25 @@ class PixelServRequestHandler(BaseHTTPRequestHandler):
     self.wfile.write(self.PIXEL)
     return
 
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+  pass
+
+def listen(host, port, certfile):
+  httpd = ThreadingHTTPServer((host, port), PixelServRequestHandler)
+  if certfile:
+    httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, server_side=True)
+  httpd.serve_forever()
+
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--host", default="0.0.0.0")
-parser.add_argument("--port", type=int, default=443)
+parser.add_argument("--port", type=int, default=80)
+parser.add_argument("--sslport", type=int, default=443)
 parser.add_argument("--certfile", default="./server.pem")
 args = parser.parse_args()
-httpd = HTTPServer((args.host, args.port), PixelServRequestHandler)
-httpd.socket = ssl.wrap_socket(httpd.socket, certfile=args.certfile, server_side=True)
-httpd.serve_forever()
+threads = [
+  Thread(target=listen, args=[args.host, args.port, None]),
+  Thread(target=listen, args=[args.host, args.sslport, args.certfile]),
+]
+[t.start() for t in threads]
+[t.join() for t in threads]
