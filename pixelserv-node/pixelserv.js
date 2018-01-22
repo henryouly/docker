@@ -18,11 +18,11 @@ const options = {
 	cert: fs.readFileSync('server.pem')
 };
 
-const reply = (req, res) => {
+const reply = function(req, res) {
 	res.writeHead(200, {'Content-Type': 'image/gif'});
 	res.write(buffer.toString('binary'), 'binary');
 	res.end();
-}
+};
 // Create/Start server
 http.createServer(reply).listen(config.port);
 https.createServer(options, reply).listen(config.ssl_port);
