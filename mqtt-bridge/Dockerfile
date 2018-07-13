@@ -1,16 +1,12 @@
-FROM resin/rpi-raspbian
-
-RUN echo 'deb http://deb.nodesource.com/node_8.x jessie main' > /etc/apt/sources.list.d/nodesource.list \
- && echo 'deb-src http://deb.nodesource.com/node_8.x jessie main' >> /etc/apt/sources.list.d/nodesource.list \
- && apt-get update \
- && apt-get install -y --no-install-recommends git nodejs \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+FROM resin/raspberry-pi2-alpine-node:4-slim
+RUN apk add --no-cache openssl
 
 RUN mkdir -p /usr/src/app \
  && cd /usr/src/app \
- && git clone https://github.com/stjohnjohnson/smartthings-mqtt-bridge mqtt-bridge \
- && cd /usr/src/app/mqtt-bridge \
- && npm install -g --production
-WORKDIR /usr/src/app/mqtt-bridge
+ && wget -qO- https://github.com/stjohnjohnson/smartthings-mqtt-bridge/archive/v1.4.0.tar.gz | tar xz \
+ && cd /usr/src/app/smartthings-mqtt-bridge-1.4.0 \
+ && npm install --production
+
+WORKDIR /usr/src/app/smartthings-mqtt-bridge-1.4.0
+
 CMD CONFIG_DIR=/config npm start
