@@ -1,0 +1,62 @@
+version: '2.1'
+
+services:
+  influxdb:
+    image: influxdb
+    container_name: influxdb
+    ports:
+      - 8086:8086
+    networks:
+      - influxdb
+    volumes:
+            #- ./influxdb:/var/lib/influxdb
+      - influxdb-storage:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=telegraf
+      - INFLUXDB_USER=telegraf
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER=henry
+      - INFLUXDB_ADMIN_PASSWORD=parrot1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sI", "http://127.0.0.1:8086/ping"]
+      interval: 30s
+      timeout: 1s
+      retries: 24
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    networks:
+      - influxdb
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning:ro
+    restart: unless-stopped
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    networks:
+      - influxdb
+    environment:
+      - HOST_PROC=/host/proc
+      - HOST_SYS=/host/sys
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./telegraf:/opt/telegraf:ro
+    restart: unless-stopped
+
+volumes:
+  grafana-storage:
+  influxdb-storage:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+networks:
+  influxdb:

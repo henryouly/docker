@@ -1,0 +1,36 @@
+hass.gboard.duckdns.org {
+  reverse_proxy * http://nas.lan:8123 {
+    header_up Host {http.request.host}
+    header_up X-Real-IP {http.request.remote}
+    header_up X-Forwarded-For {http.request.remote}
+    header_up X-Forwarded-Port {http.request.port}
+    header_up X-Forwarded-Proto {http.request.scheme}
+  }
+}
+docker.gboard.duckdns.org {
+  reverse_proxy * http://nas.lan:9000 {
+    header_up Host {http.request.host}
+    header_up X-Real-IP {http.request.remote}
+    header_up X-Forwarded-For {http.request.remote}
+    header_up X-Forwarded-Port {http.request.port}
+    header_up X-Forwarded-Proto {http.request.scheme}
+  }
+}
+pihole.gboard.duckdns.org {
+  reverse_proxy * http://nas.lan:10080 {
+    header_up Host {http.request.host}
+    header_up X-Real-IP {http.request.remote}
+    header_up X-Forwarded-For {http.request.remote}
+    header_up X-Forwarded-Port {http.request.port}
+    header_up X-Forwarded-Proto {http.request.scheme}
+  }
+}
+nas.gboard.duckdns.org {
+  reverse_proxy * http://nas.lan:8080 {
+    header_up Host {http.request.host}
+    header_up X-Real-IP {http.request.remote}
+    header_up X-Forwarded-For {http.request.remote}
+    header_up X-Forwarded-Port {http.request.port}
+    header_up X-Forwarded-Proto {http.request.scheme}
+  }
+}

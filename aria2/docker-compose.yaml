@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  aria2:
+    build: .
+    container_name: aria2
+    ports:
+      - 6800:6800
+    volumes:
+      - ./aria2.conf:/root/aria2.conf
+      - /media/data/download:/data
+    restart: unless-stopped
+
+  webui:
+    build: webui-aria2/
+    container_name: webui-aria2
+    ports:
+      - 6801:80
+    restart: unless-stopped
+
+  filebrowser:
+    build: filebrowser/
+    container_name: filebrowser
+    ports:
+      - 6802:80
+    restart: unless-stopped

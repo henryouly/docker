@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  pihole:
+    image: pihole/pihole:4.2.2-1
+    container_name: pihole
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 10080:80
+    volumes:
+      - /media/data/docker-persist/pihole/etc-pihole/:/etc/pihole/
+      - /media/data/docker-persist/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    restart: unless-stopped

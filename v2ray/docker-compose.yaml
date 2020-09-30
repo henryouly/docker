@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  v2ray:
+    build: .
+    container_name: v2ray
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - 443:443
+    restart: unless-stopped

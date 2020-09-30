@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  caddy:
+    image: caddy:legacy
+    container_name: caddy
+    environment:
+      - TZ=America/Los_Angeles
+      - DUCKDNS_TOKEN=75ac4c0b-cfb0-4979-bad8-d2efcf4bc3fb
+    ports:
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile:ro
+    restart: unless-stopped

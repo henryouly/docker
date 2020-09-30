@@ -1,0 +1,47 @@
+(tls) {
+  tls {
+    #ca https://acme-staging-v02.api.letsencrypt.org/directory
+    wildcard
+    dns duckdns
+  }
+}
+
+hass.gboard.duckdns.org {
+  import tls
+  proxy / http://nas.lan:8123 {
+    keepalive 32
+    transparent
+    websocket
+  }
+}
+
+nas.gboard.duckdns.org {
+  import tls
+  proxy / http://nas.lan:8080 {
+    transparent
+  }
+}
+
+docker.gboard.duckdns.org {
+  import tls
+  proxy / http://xu4.lan:9000 {
+    transparent
+  }
+}
+
+pihole.gboard.duckdns.org {
+  import tls
+  proxy / http://nas.lan:10080 {
+    transparent
+    websocket
+  }
+}
+
+notebook.gboard.duckdns.org {
+  import tls
+  proxy / http://nas.lan:8888 {
+    keepalive 30
+    transparent
+    websocket
+  }
+}

@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  jupyter:
+    build: .
+    container_name: jupyter
+    ports:
+      - 8888:8888
+    volumes:
+      - /media/data/docker-persist/notebook:/srv/notebook
+    restart: unless-stopped

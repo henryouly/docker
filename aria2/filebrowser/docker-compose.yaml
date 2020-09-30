@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:pi
+    container_name: filebrowser
+    ports:
+      - 6802:80
+    volumes:
+      - ./config/filebrowser.json:/.filebrowser.json:ro
+      - ./data/database.db:/database.db
+      - /media/data:/srv
+    restart: unless-stopped
